@@ -16,6 +16,6 @@ class City: NSObject {
 //    var lat: String!
 //    var long: String!
 //    var country: String!
-    var icon: UIImage!
+    var icon: String!
     var weather = [[String:String]]() // humadity, pressure, wind speed, wether value
 }

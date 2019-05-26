@@ -7,8 +7,9 @@
 //
 
 import UIKit
+import CoreLocation
 
-class CityListVC: UITableViewController {
+class CityListVC: UITableViewController, CLLocationManagerDelegate {
 
     private let cellIdentifier = "cityListCellIdentifier"
     private let weatherDetailsSegueIdentifier = "displayWeatherDetails"
@@ -18,7 +19,13 @@ class CityListVC: UITableViewController {
     let urlDataRetriving = URLDataRetriving()
     var dataToPass = -1
 
+    let locationManager = CLLocationManager()
+
     override func viewDidLoad() {
+        locationManager.delegate = self
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.startUpdatingLocation()
         super.viewDidLoad()
     }
 
@@ -61,6 +68,7 @@ class CityListVC: UITableViewController {
         }
     }
 
+    
     // MARK: - Navigation
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
