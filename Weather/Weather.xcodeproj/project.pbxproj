@@ -19,6 +19,7 @@
 		99668CB22298AA2800EC8060 /* WeatherForecastCell.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99668CB12298AA2800EC8060 /* WeatherForecastCell.swift */; };
 		99668CB82299C96F00EC8060 /* URLDataRetriving.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99668CB72299C96F00EC8060 /* URLDataRetriving.swift */; };
 		99668CBA2299CA8000EC8060 /* City.swift in Sources */ = {isa = PBXBuildFile; fileRef = 99668CB92299CA8000EC8060 /* City.swift */; };
+		99668CC7229A280D00EC8060 /* CoreLocation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 99668CC6229A280D00EC8060 /* CoreLocation.framework */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -36,6 +37,7 @@
 		99668CB12298AA2800EC8060 /* WeatherForecastCell.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WeatherForecastCell.swift; sourceTree = "<group>"; };
 		99668CB72299C96F00EC8060 /* URLDataRetriving.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = URLDataRetriving.swift; sourceTree = "<group>"; };
 		99668CB92299CA8000EC8060 /* City.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = City.swift; sourceTree = "<group>"; };
+		99668CC6229A280D00EC8060 /* CoreLocation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = CoreLocation.framework; path = System/Library/Frameworks/CoreLocation.framework; sourceTree = SDKROOT; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -43,6 +45,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				99668CC7229A280D00EC8060 /* CoreLocation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -54,6 +57,7 @@
 			children = (
 				9953D6E52298614600ED6AFC /* Weather */,
 				9953D6E42298614600ED6AFC /* Products */,
+				99668CC5229A280D00EC8060 /* Frameworks */,
 			);
 			sourceTree = "<group>";
 		};
@@ -171,6 +175,14 @@
 				99668CAD2298A90C00EC8060 /* WeatherDetailsVC.swift */,
 			);
 			path = ViewController;
+			sourceTree = "<group>";
+		};
+		99668CC5229A280D00EC8060 /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				99668CC6229A280D00EC8060 /* CoreLocation.framework */,
+			);
+			name = Frameworks;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */

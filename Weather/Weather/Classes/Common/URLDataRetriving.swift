@@ -15,7 +15,7 @@ class URLDataRetriving: NSObject {
     }
     
     func gatData(From url: String, completionHandler: @escaping (_ data:Data) -> Void){
-        let url = URL(string: url)
+        let url = URL(string: url.replacingOccurrences(of: " ", with: "%20"))
         let task = URLSession.shared.dataTask(with: url!) { (data, response, error) in
             if error != nil{
                 print(error!)
