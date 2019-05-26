@@ -6,6 +6,7 @@
 //  Copyright © 2019 Nilay Padsala. All rights reserved.
 //
 
+import UIKit
 import Foundation
 import CoreLocation
 
@@ -35,22 +36,24 @@ extension CityListVC{
             do {
                 let jsonData = try JSONSerialization.jsonObject(with: weatherData, options: .mutableContainers) as! [String: Any]
                 if (jsonData["cod"] != nil) && ((jsonData["cod"] as! String) == "200"){
-                    let cityDetail = (jsonData["list"] as! [[String: Any]])[0]
-                    let newCity = self.getCityFrom(data: cityDetail)
-                    if let index = self.cityList.firstIndex(where: { $0.name == newCity.name }){
-                        self.cityList[index] = newCity
-                        DispatchQueue.main.async {
-                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                    if (jsonData["list"] as! [[String: Any]]).count > 0{
+                        let cityDetail = (jsonData["list"] as! [[String: Any]])[0]
+                        let newCity = self.getCityFrom(data: cityDetail)
+                        if let index = self.cityList.firstIndex(where: { $0.name == newCity.name }){
+                            self.cityList[index] = newCity
+                            DispatchQueue.main.async {
+                                self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                            }
                         }
-                    }
-                    else{
-                        self.cityList.append(newCity)
-                        DispatchQueue.main.async {
-                            self.tableView.insertRows(at: [IndexPath(row: self.cityList.count - 1, section: 0)], with: .automatic)
+                        else{
+                            self.cityList.append(newCity)
+                            DispatchQueue.main.async {
+                                self.tableView.insertRows(at: [IndexPath(row: self.cityList.count - 1, section: 0)], with: .automatic)
+                            }
                         }
+                        
+                        
                     }
-                    
-                    
                 }
             }
             catch{
@@ -61,7 +64,6 @@ extension CityListVC{
 
     }
     
-    //MARK:- LocationManagerDelegate
     
     @IBAction func changeMeasurements(_ sender: Any) {
         if self.messurement == "Metric"{
@@ -74,7 +76,7 @@ extension CityListVC{
     }
     
     @IBAction func addCity(_ sender: Any) {
-        print("new city")
+        self.promptForNewCity()
     }
     
     func getWindDirectionFrom(degree: Int) -> String{
@@ -161,6 +163,8 @@ extension CityListVC{
         
         return newCity
     }
+    
+    //MARK:- LocationManagerDelegate
  
     func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
         CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error) -> Void in
@@ -189,5 +193,21 @@ extension CityListVC{
             self.getWeatherDetailsFor(city: city)
         }
         
+    }
+    
+    func promptForNewCity() {
+        let ac = UIAlertController(title: "Enter City Name:", message: nil, preferredStyle: .alert)
+        ac.addTextField()
+        
+        let submitAction = UIAlertAction(title: "Submit", style: .default) { [unowned ac] _ in
+            let city = ac.textFields![0].text
+            if !self.cityList.contains(where: { $0.name == city }){
+                self.getWeatherDetailsFor(city: city!)
+            }
+        }
+        
+        ac.addAction(submitAction)
+        
+        present(ac, animated: true)
     }
 }
