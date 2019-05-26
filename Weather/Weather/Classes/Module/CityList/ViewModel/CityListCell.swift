@@ -10,11 +10,23 @@ import UIKit
 
 class CityListCell: UITableViewCell {
 
-    @IBOutlet weak var cityName: UILabel!
+    @IBOutlet weak var lblCityName: UILabel!
+    @IBOutlet weak var lblCityTemperature: UILabel!
+    @IBOutlet weak var imgWeather: UIImageView!
+    private var cellCity = City()
+    var city: City{
+        set(newCity){
+            self.cellCity = newCity
+            self.lblCityName.text = newCity.name ?? ""
+            self.lblCityTemperature.text = newCity.temperature ?? ""
+        }
+        get{
+            return self.cellCity
+        }
+    }
     
     override func awakeFromNib() {
         super.awakeFromNib()
-        cityName.text = "Cle"
     }
 
     override func setSelected(_ selected: Bool, animated: Bool) {
