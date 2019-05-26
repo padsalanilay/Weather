@@ -7,12 +7,12 @@
 //
 
 import Foundation
+import CoreLocation
 
 extension CityListVC{
     
     func getAllCities(){
         if cityList.count == 0{
-//            let currentCity = getCurrentCity()
             let cities = [ "London", "Tokyo"]
             for city in cities{
                 let newCity = City()
@@ -37,17 +37,19 @@ extension CityListVC{
                 if (jsonData["cod"] != nil) && ((jsonData["cod"] as! String) == "200"){
                     let cityDetail = (jsonData["list"] as! [[String: Any]])[0]
                     let newCity = self.getCityFrom(data: cityDetail)
-                    var reloadIndex = self.cityList.count - 1
                     if let index = self.cityList.firstIndex(where: { $0.name == newCity.name }){
                         self.cityList[index] = newCity
-                        reloadIndex = index
+                        DispatchQueue.main.async {
+                            self.tableView.reloadRows(at: [IndexPath(row: index, section: 0)], with: .automatic)
+                        }
                     }
                     else{
                         self.cityList.append(newCity)
+                        DispatchQueue.main.async {
+                            self.tableView.insertRows(at: [IndexPath(row: self.cityList.count - 1, section: 0)], with: .automatic)
+                        }
                     }
-                    DispatchQueue.main.async {
-                        self.tableView.reloadRows(at: [IndexPath(row: reloadIndex, section: 0)], with: .automatic)
-                    }
+                    
                     
                 }
             }
@@ -59,10 +61,7 @@ extension CityListVC{
 
     }
     
-    func getCurrentCity() -> String{
-        
-        return ""
-    }
+    //MARK:- LocationManagerDelegate
     
     @IBAction func changeMeasurements(_ sender: Any) {
         if self.messurement == "Metric"{
@@ -136,7 +135,7 @@ extension CityListVC{
         
         let weather = (data["weather"] as! [[String: Any]])[0]
         newCity.weatherDescription = (weather["description"] as! String)// weather description
-        //        newCity.icon = //get image from url or display the default image here set it later
+        newCity.icon = (weather["icon"] as! String)//get image from url or display the default image here set it later
         
         //add weather details for perticular city like humidity, pressure, wind speed and direction, weather condition and value
         newCity.weather.append(["Humidity" : ("\((details["humidity"] as! NSNumber))%")])
@@ -162,5 +161,33 @@ extension CityListVC{
         
         return newCity
     }
+ 
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        CLGeocoder().reverseGeocodeLocation(manager.location!, completionHandler: {(placemarks, error) -> Void in
+            if (error != nil) {
+                print("Reverse geocoder failed with error" + error!.localizedDescription)
+                return
+            }
+            
+            if placemarks != nil{
+                let pm = placemarks![0]
+                self.displayLocationInfo(placemark: pm)
+            } else {
+                print("Problem with the data received from geocoder")
+            }
+        })
+    }
     
+    func locationManager(_ manager: CLLocationManager, didFinishDeferredUpdatesWithError error: Error?) {
+        print("Error while updating location \(error?.localizedDescription ?? "")")
+    }
+    
+    func displayLocationInfo(placemark: CLPlacemark) {
+        locationManager.stopUpdatingLocation()
+        let city = placemark.locality ?? ""
+        if !self.cityList.contains(where: { $0.name == city }){
+            self.getWeatherDetailsFor(city: city)
+        }
+        
+    }
 }
